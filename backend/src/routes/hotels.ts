@@ -1,12 +1,12 @@
 import { desc } from "drizzle-orm";
 import { Hono } from "hono";
 
-import { AmadeusClient, AmadeusError } from "../amadeus.js";
+import { AmadeusError, getClient } from "../amadeus.js";
 import { db } from "../db/index.js";
 import { hotelSearches } from "../db/schema.js";
 
 const hotels = new Hono();
-const amadeus = new AmadeusClient();
+const amadeus = getClient();
 
 function parseDate(value: string | undefined): string | null {
   if (!value) return null;

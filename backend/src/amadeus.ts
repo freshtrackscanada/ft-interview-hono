@@ -7,7 +7,24 @@
  *   3. Fetch hotel offers for those IDs
  *
  * Docs: https://developers.amadeus.com/self-service/category/hotels
+ *
+ * NOTE: Amadeus is shutting down its self-service portal in July 2026. The
+ * default mode for this boilerplate is `mock` — see ./mock-amadeus.ts. Set
+ * AMADEUS_MODE=live in .env if you have credentials for a working provider
+ * with an Amadeus-compatible response shape.
  */
+
+import { MockAmadeusClient } from "./mock-amadeus.js";
+
+export interface HotelSearchClient {
+  hotelsByCity(cityCode: string, limit?: number): Promise<HotelByCity[]>;
+  hotelOffers(args: {
+    hotelIds: string[];
+    checkInDate: string;
+    checkOutDate: string;
+    adults?: number;
+  }): Promise<HotelOffer[]>;
+}
 
 export class AmadeusError extends Error {
   constructor(message: string) {
@@ -154,4 +171,15 @@ export class AmadeusClient {
     }
     return results;
   }
+}
+
+/**
+ * Return the configured hotel-search client.
+ *   AMADEUS_MODE=mock (default) → fixtures in ./mock-amadeus.ts
+ *   AMADEUS_MODE=live           → real Amadeus client (requires credentials)
+ */
+export function getClient(): HotelSearchClient {
+  const mode = (process.env.AMADEUS_MODE ?? "mock").toLowerCase();
+  if (mode === "live") return new AmadeusClient();
+  return new MockAmadeusClient();
 }

@@ -1,0 +1,24 @@
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# Node
+node_modules/
+dist/
+.npm/
+*.tsbuildinfo
+
+# Next.js
+.next/
+out/
+next-env.d.ts.bak
+
+# Drizzle
+backend/drizzle/
+
+# Editor
+.vscode/
+.idea/
+.DS_Store
+*.swp
